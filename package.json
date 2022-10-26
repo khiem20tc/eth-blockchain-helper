@@ -1,0 +1,22 @@
+{
+  "name": "blockchain-helper",
+  "version": "1.0.0",
+  "description": "package helper for blockchain ethereum",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index",
+    "build": "tsc"
+  },
+  "author": "Khiem Nguyen Huynh Huu",
+  "license": "ISC",
+  "dependencies": {
+    "blockchain-helper": "^1.0.0",
+    "ethereumjs-tx": "^2.1.2",
+    "web3": "^1.8.0"
+  }
+}
