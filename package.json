@@ -1,9 +1,9 @@
 {
   "name": "ethereum-helper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "package helper for blockchain ethereum",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/commonjs/index.js",
+  "types": "dist/commonjs/index.d.ts",
   "files": [
     "dist"
   ],
@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "blockchain-helper": "^1.0.0",
-    "ethereum-helper": "^1.0.0",
+    "ethereum-helper": "1.0.1",
     "ethereumjs-tx": "^2.1.2",
     "web3": "^1.8.0"
   }
