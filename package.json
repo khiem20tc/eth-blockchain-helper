@@ -1,6 +1,6 @@
 {
   "name": "ethereum-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "package helper for blockchain ethereum",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
