@@ -1,5 +1,5 @@
 {
-  "name": "blockchain-helper",
+  "name": "ethereum-helper",
   "version": "1.0.0",
   "description": "package helper for blockchain ethereum",
   "main": "dist/index.js",
@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "blockchain-helper": "^1.0.0",
+    "ethereum-helper": "^1.0.0",
     "ethereumjs-tx": "^2.1.2",
     "web3": "^1.8.0"
   }
