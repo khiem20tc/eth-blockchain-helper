@@ -1,9 +1,9 @@
-export default class BlockchainService {
+export declare class BlockchainService {
     protected WEB3: any;
+    protected SCA: any;
     protected gasPrice: any;
     protected ABI: any;
-    protected SCA: any;
-    constructor(RPC: string, gasPrice: number, ABI: any, SCA: string);
+    constructor(RPC: string, gasPrice: number, SCA: string, ABI: any);
     createRaw(funcName?: string, params?: any[], from?: string): Promise<{
         from: string;
         to: any;
@@ -17,6 +17,6 @@ export default class BlockchainService {
         tx: any;
     }>;
     readFunc(funcName: string, params: any[], from: any): Promise<any>;
-    getReceipt(): Promise<void>;
-    getEvent(): Promise<void>;
+    getReceipt(txHash: string): Promise<any>;
+    getEvent(topics?: any[], fromBlock?: number): Promise<any>;
 }

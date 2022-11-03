@@ -12,14 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BlockchainService = void 0;
 const web3_1 = __importDefault(require("web3"));
 const ethereumjs_tx_1 = require("ethereumjs-tx");
 class BlockchainService {
-    constructor(RPC, gasPrice, ABI, SCA) {
+    constructor(RPC, gasPrice, SCA, ABI) {
         this.WEB3 = new web3_1.default(new web3_1.default.providers.HttpProvider(RPC));
         this.gasPrice = gasPrice;
-        this.ABI = ABI;
         this.SCA = SCA;
+        this.ABI = ABI;
     }
     createRaw(funcName = "", params = [], from = "") {
         return __awaiter(this, void 0, void 0, function* () {
@@ -36,7 +37,6 @@ class BlockchainService {
                 nonce: nonce,
                 data: dataFunc,
             };
-            console.log("raw", rawTx);
             return rawTx;
         });
     }
@@ -59,14 +59,22 @@ class BlockchainService {
             return dataFunc;
         });
     }
-    getReceipt() {
+    getReceipt(txHash) {
         return __awaiter(this, void 0, void 0, function* () {
+            const receipt = this.WEB3.eth.getTransactionReceipt(txHash);
+            return receipt;
         });
     }
-    getEvent() {
+    getEvent(topics = [], fromBlock = 0) {
         return __awaiter(this, void 0, void 0, function* () {
+            const event = yield this.WEB3.eth.getPastLogs({
+                address: this.SCA,
+                topics,
+                fromBlock: fromBlock
+            });
+            return event;
         });
     }
 }
-exports.default = BlockchainService;
+exports.BlockchainService = BlockchainService;
 //# sourceMappingURL=index.js.map
