@@ -38,7 +38,7 @@ export default class BlockchainService {
      */
     public async createRaw(funcName="",params=[],from="") {
       
-      let ABI = JSON.parse(this.ABI.toString())
+      let ABI = JSON.parse(JSON.stringify(this.ABI))
 
       const contractDeployed = new this.WEB3.eth.Contract(
         ABI,
@@ -102,7 +102,7 @@ export default class BlockchainService {
      */
     public async readFunc(funcName="",params=[], from) {
 
-      let ABI = JSON.parse(this.ABI.toString())
+      let ABI = JSON.parse(JSON.stringify(this.ABI))
 
       const contractDeployed = new this.WEB3.eth.Contract(
         ABI,

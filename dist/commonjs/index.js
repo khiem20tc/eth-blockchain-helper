@@ -23,7 +23,7 @@ class BlockchainService {
     }
     createRaw(funcName = "", params = [], from = "") {
         return __awaiter(this, void 0, void 0, function* () {
-            let ABI = JSON.parse(this.ABI.toString());
+            let ABI = JSON.parse(JSON.stringify(this.ABI));
             const contractDeployed = new this.WEB3.eth.Contract(ABI, this.SCA);
             const dataFunc = yield contractDeployed.methods[funcName](...params).encodeABI();
             const gasLimit = yield contractDeployed.methods[funcName](...params).estimateGas();
@@ -52,7 +52,7 @@ class BlockchainService {
     }
     readFunc(funcName = "", params = [], from) {
         return __awaiter(this, void 0, void 0, function* () {
-            let ABI = JSON.parse(this.ABI.toString());
+            let ABI = JSON.parse(JSON.stringify(this.ABI));
             const contractDeployed = new this.WEB3.eth.Contract(ABI, this.SCA);
             const dataFunc = yield contractDeployed.methods[funcName](...params).call({ from });
             return dataFunc;
