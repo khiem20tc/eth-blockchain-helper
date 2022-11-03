@@ -1,4 +1,4 @@
-export declare class BlockchainService {
+export default class BlockchainService {
     protected WEB3: any;
     protected SCA: any;
     protected gasPrice: any;

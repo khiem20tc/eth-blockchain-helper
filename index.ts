@@ -4,7 +4,7 @@ import Web3 from "web3";
 import {Transaction} from "ethereumjs-tx";
 //const Transaction = require("ethereumjs-tx")
 
-export class BlockchainService {
+export default class BlockchainService {
     
     protected WEB3
     protected SCA
