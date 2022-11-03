@@ -1,5 +1,5 @@
 {
-  "name": "eth-helper",
+  "name": "eth-blockchain-helper",
   "version": "1.0.0",
   "description": "package helper for blockchain ethereum",
   "main": "dist/commonjs/index.js",
