@@ -1,7 +1,7 @@
 {
   "name": "eth-blockchain-helper",
-  "version": "1.0.0",
-  "description": "package helper for blockchain ethereum",
+  "version": "1.0.3",
+  "description": "package helper for ethereum blockchain and EVM based network",
   "main": "dist/commonjs/index.js",
   "types": "dist/commonjs/index.d.ts",
   "files": [
@@ -14,8 +14,27 @@
   },
   "author": "Khiem Nguyen Huynh Huu",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/khiem20tc/eth-blockchain-helper.git"
+  },
+  "homepage": "https://github.com/khiem20tc/eth-blockchain-helper#readme",
   "dependencies": {
     "ethereumjs-tx": "^2.1.2",
     "web3": "^1.8.0"
-  }
+  },
+  "keywords": [
+    "ethereum",
+    "eth",
+    "blockchain",
+    "smartcontract",
+    "signature",
+    "transaction",
+    "tx",
+    "web3",
+    "dapp",
+    "solidity",
+    "helper",
+    "npm"
+  ]
 }

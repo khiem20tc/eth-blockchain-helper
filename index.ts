@@ -36,7 +36,7 @@ export default class BlockchainService {
      * @param [from] - The address of the account that will be sending the transaction.
      * @returns A raw transaction object.
      */
-    public async createRaw(funcName="",params=[],from="") {
+    public async createRaw(funcName="",params=[],from="",value=0) {
       
       let ABI = JSON.parse(JSON.stringify(this.ABI))
 
@@ -51,7 +51,7 @@ export default class BlockchainService {
 
       const gasLimit = await contractDeployed.methods[funcName](
         ...params
-      ).estimateGas()
+      ).estimateGas({ from })
 
       const nonce = await this.WEB3.eth.getTransactionCount(from)
 
@@ -62,6 +62,7 @@ export default class BlockchainService {
         gasPrice: this.gasPrice,
         nonce: nonce,
         data: dataFunc,
+        value: value
       };
 
       return rawTx;
@@ -75,7 +76,7 @@ export default class BlockchainService {
      * @param [chainId=97] - The chain ID of the network you're sending to.
      * @returns The transaction hash and the transaction object.
      */
-    public async sendRaw(rawTx = {}, privateKey, chainId=97) {
+    public async signRaw(rawTx = {}, privateKey, chainId=97) {
 
       privateKey = Buffer.from(privateKey, 'hex')  
 
@@ -84,6 +85,16 @@ export default class BlockchainService {
       await transaction.sign(privateKey)
 
       let signedTx = '0x' + transaction.serialize().toString('hex')
+
+      return signedTx;
+    }
+
+   /**
+    * It sends a signed transaction to the blockchain.
+    * @param {string} signedTx - The signed transaction in hex format.
+    * @returns The txHash and the tx object.
+    */
+    public async sendSignedRaw(signedTx: string) {
 
       let txHash = this.WEB3.utils.keccak256(signedTx) // ALIAS
 
@@ -136,11 +147,12 @@ export default class BlockchainService {
      * topics[1-3]: indexed params
      * @returns The event log.
      */
-    public async getEvent(topics=[], fromBlock=0) {
+    public async getEvent(topics=[], fromBlock=0, toBlock=499) {
       const event = await this.WEB3.eth.getPastLogs({
         address: this.SCA, //smart contract address published event
         topics, 
-        fromBlock: fromBlock   
+        fromBlock,
+        toBlock
     })
 
     return event;

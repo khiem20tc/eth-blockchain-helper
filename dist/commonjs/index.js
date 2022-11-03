@@ -21,12 +21,12 @@ class BlockchainService {
         this.SCA = SCA;
         this.ABI = ABI;
     }
-    createRaw(funcName = "", params = [], from = "") {
+    createRaw(funcName = "", params = [], from = "", value = 0) {
         return __awaiter(this, void 0, void 0, function* () {
             let ABI = JSON.parse(JSON.stringify(this.ABI));
             const contractDeployed = new this.WEB3.eth.Contract(ABI, this.SCA);
             const dataFunc = yield contractDeployed.methods[funcName](...params).encodeABI();
-            const gasLimit = yield contractDeployed.methods[funcName](...params).estimateGas();
+            const gasLimit = yield contractDeployed.methods[funcName](...params).estimateGas({ from });
             const nonce = yield this.WEB3.eth.getTransactionCount(from);
             const rawTx = {
                 from: from,
@@ -35,16 +35,22 @@ class BlockchainService {
                 gasPrice: this.gasPrice,
                 nonce: nonce,
                 data: dataFunc,
+                value: value
             };
             return rawTx;
         });
     }
-    sendRaw(rawTx = {}, privateKey, chainId = 97) {
+    signRaw(rawTx = {}, privateKey, chainId = 97) {
         return __awaiter(this, void 0, void 0, function* () {
             privateKey = Buffer.from(privateKey, 'hex');
             var transaction = new ethereumjs_tx_1.Transaction(rawTx, { chain: chainId });
             yield transaction.sign(privateKey);
             let signedTx = '0x' + transaction.serialize().toString('hex');
+            return signedTx;
+        });
+    }
+    sendSignedRaw(signedTx) {
+        return __awaiter(this, void 0, void 0, function* () {
             let txHash = this.WEB3.utils.keccak256(signedTx);
             const tx = yield this.WEB3.eth.sendSignedTransaction(signedTx);
             return { txHash, tx };
@@ -64,12 +70,13 @@ class BlockchainService {
             return receipt;
         });
     }
-    getEvent(topics = [], fromBlock = 0) {
+    getEvent(topics = [], fromBlock = 0, toBlock = 499) {
         return __awaiter(this, void 0, void 0, function* () {
             const event = yield this.WEB3.eth.getPastLogs({
                 address: this.SCA,
                 topics,
-                fromBlock: fromBlock
+                fromBlock,
+                toBlock
             });
             return event;
         });
