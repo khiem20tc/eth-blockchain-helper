@@ -1,4 +1,27 @@
 'use strict';
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const web3_1 = __importDefault(require("web3"));
-const ethereumjs_tx_1 = require("ethereumjs-tx");
+const Tx = __importStar(require("ethereumjs-tx"));
 class BlockchainService {
     constructor(RPC, gasPrice, SCA, ABI) {
         this.WEB3 = new web3_1.default(new web3_1.default.providers.HttpProvider(RPC));
@@ -43,7 +66,7 @@ class BlockchainService {
     signRaw(rawTx = {}, privateKey, chainId = 97) {
         return __awaiter(this, void 0, void 0, function* () {
             privateKey = Buffer.from(privateKey, 'hex');
-            var transaction = new ethereumjs_tx_1.Transaction(rawTx, { chain: chainId });
+            var transaction = new Tx(rawTx, { chainId: chainId });
             yield transaction.sign(privateKey);
             let signedTx = '0x' + transaction.serialize().toString('hex');
             return signedTx;
@@ -79,6 +102,13 @@ class BlockchainService {
                 toBlock
             });
             return event;
+        });
+    }
+    decodeLog(data = "", topics = []) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ABI = JSON.parse(JSON.stringify(this.ABI));
+            const result = yield this.WEB3.eth.abi.decodeLog(ABI, data, topics);
+            return result;
         });
     }
 }
