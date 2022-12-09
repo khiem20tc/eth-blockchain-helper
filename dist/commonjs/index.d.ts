@@ -21,4 +21,5 @@ export default class BlockchainService {
     readFunc(funcName: string, params: any[], from: any): Promise<any>;
     getReceipt(txHash: string): Promise<any>;
     getEvent(topics?: any[], fromBlock?: number, toBlock?: number): Promise<any>;
+    decodeLog(data?: string, topics?: any[]): Promise<any>;
 }

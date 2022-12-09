@@ -1,8 +1,9 @@
 'use strict';
 
 import Web3 from "web3";
-import {Transaction} from "ethereumjs-tx";
+// import {Transaction} from "ethereumjs-tx";
 //const Transaction = require("ethereumjs-tx")
+import * as Tx from "ethereumjs-tx";
 
 export default class BlockchainService {
     
@@ -78,9 +79,15 @@ export default class BlockchainService {
      */
     public async signRaw(rawTx = {}, privateKey, chainId=97) {
 
-      privateKey = Buffer.from(privateKey, 'hex')  
+      // privateKey = Buffer.from(privateKey, 'hex')  
 
-      var transaction = new Transaction(rawTx, {chain: chainId})
+      // var transaction = new Transaction(rawTx, {chain: chainId})
+
+      // await transaction.sign(privateKey)
+
+      privateKey = Buffer.from(privateKey, 'hex')
+
+      var transaction = new Tx(rawTx, {chainId: chainId})
 
       await transaction.sign(privateKey)
 
