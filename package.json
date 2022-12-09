@@ -1,6 +1,6 @@
 {
   "name": "eth-blockchain-helper",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "package helper for ethereum blockchain and EVM based network",
   "main": "dist/commonjs/index.js",
   "types": "dist/commonjs/index.d.ts",
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/khiem20tc/eth-blockchain-helper#readme",
   "dependencies": {
-    "ethereumjs-tx": "1.3.5",
+    "ethereumjs-tx": "1.3.7",
     "web3": "1.8.0"
   },
   "keywords": [
