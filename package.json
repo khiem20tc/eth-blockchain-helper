@@ -1,6 +1,6 @@
 {
   "name": "eth-blockchain-helper",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "package helper for ethereum blockchain and EVM based network",
   "main": "dist/commonjs/index.js",
   "types": "dist/commonjs/index.d.ts",
