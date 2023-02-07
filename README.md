@@ -3,15 +3,30 @@ This library help interacte with Smart Contract and more Web3 utils based on Eth
 
 ## Features 
 
+### Transaction
+
 > **Create raw transaction** 
 
 > **Sign raw transaction**
 
 > **Send raw transaction**
 
+> **Decode raw transaction**
+
 > **Get receipt transaction**
 
+### Event
+
 > **Get event log**
+
+> **Decode event log**
+
+### Signature
+
+> **Sign message**
+
+> **Recovery signer**
+
 
 ### Install
 
