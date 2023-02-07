@@ -2,6 +2,7 @@
 
 import Web3 from "web3";
 import {default as Tx} from "ethereumjs-tx";
+import { setUncaughtExceptionCaptureCallback } from "process";
 
 export default class BlockchainService {
     
@@ -202,6 +203,55 @@ export default class BlockchainService {
     const result = await this.WEB3.eth.abi.decodeLog(ABI, data, topics);
 
     return result;
+  }
+
+ /**
+  * It takes a private key and a list of parameters, hashes the parameters, and then signs the hash
+  * with the private key
+  * @param privatekey - The private key of the account that will sign the message.
+  * @param params - The parameters that you want to sign.
+  * @returns The signature of the message.
+  */
+ /**
+  * It takes a private key and a list of parameters, hashes them, and then signs the hash with the
+  * private key
+  * @param privatekey - The private key of the account that will sign the message.
+  * @param params - The parameters that you want to sign.
+  * @returns The signature of the message.
+  */
+  public async signMessage (privatekey, ...params) {
+
+    const message = await this.WEB3.utils.soliditySha3(
+      ...params
+    );
+
+    const signature = await this.WEB3.eth.accounts.sign(
+      message,
+      privatekey, 
+    );
+
+    return signature;
+  }
+
+  /**
+   * It takes a signature and a list of parameters, hashes the parameters, and then recovers the
+   * signer's address from the signature
+   * @param signature - The signature of the message
+   * @param params - The parameters that you want to hash.
+   * @returns The signer's address.
+   */
+  public async recoverSigner (signature, ...params) {
+
+    const message = await this.WEB3.utils.soliditySha3(
+      ...params
+    );
+
+    const signer = await this.WEB3.eth.accounts.recover(
+      message,
+      signature, 
+    );
+
+    return signer;
   }
 
 }
