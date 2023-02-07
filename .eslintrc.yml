@@ -1,0 +1,94 @@
+env:
+  es2021: true
+  node: true
+extends:
+  - "eslint:recommended"
+  - "plugin:@typescript-eslint/recommended"
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaVersion: 12
+  sourceType: module
+plugins:
+  - "@typescript-eslint"
+rules:
+  indent:
+    - error
+    - 2
+    - SwitchCase: 1
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - double
+  semi:
+    - error
+    - always
+  no-unused-vars:
+    - warn
+    - argsIgnorePattern: "^_"
+  no-eval:
+    - error
+  no-extra-boolean-cast:
+    - error
+  no-mixed-spaces-and-tabs:
+    - error
+  no-multiple-empty-lines:
+    - error
+    - max: 1
+      maxEOF: 0
+  no-unreachable:
+    - error
+  keyword-spacing:
+    - error
+  prefer-const:
+    - warn
+    - destructuring: any
+  key-spacing:
+    - error
+  new-cap:
+    - warn
+  no-array-constructor:
+    - error
+  no-async-promise-executor:
+    - error
+  no-compare-neg-zero:
+    - error
+  no-const-assign:
+    - error
+  no-constant-condition:
+    - error
+  no-delete-var:
+    - error
+  no-dupe-args:
+    - error
+  no-lone-blocks:
+    - error
+  no-multi-spaces:
+    - error
+  no-case-declarations:
+    - warn
+  no-console:
+    - warn
+  no-multi-str:
+    - error
+  no-var:
+    - warn
+  no-this-alias:
+    - 0
+  camelcase:
+    - 1
+  max-len:
+    - 1
+    - code: 100
+      ignoreUrls: true
+      ignorePattern: ^import\s.+\sfrom\s.+;
+  curly:
+    - error
+  brace-style:
+    - error
+    - 1tbs
+  no-useless-catch:
+    - warn
+  "@typescript-eslint/no-var-requires":
+    - warn
