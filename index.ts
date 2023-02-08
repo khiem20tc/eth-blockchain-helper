@@ -263,7 +263,7 @@ export default class BlockchainService {
 
   // FUNCTION MODULE
 
-  public async getFuncCall (funcName, params =[], from) {
+  public async getFuncCall (funcName, params =[]) {
 
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
