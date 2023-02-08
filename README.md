@@ -3,6 +3,10 @@ This library help interacte with Smart Contract and more Web3 utils based on Eth
 
 ## Features 
 
+### Block
+
+> **Get block** 
+
 ### Transaction
 
 > **Create raw transaction** 
@@ -26,6 +30,12 @@ This library help interacte with Smart Contract and more Web3 utils based on Eth
 > **Sign message**
 
 > **Recovery signer**
+
+### Function
+
+> **Get function calldata**
+
+> **Estimate gas**
 
 
 ### Install

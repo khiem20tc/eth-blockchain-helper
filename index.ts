@@ -2,7 +2,6 @@
 
 import Web3 from "web3";
 import {default as Tx} from "ethereumjs-tx";
-import { setUncaughtExceptionCaptureCallback } from "process";
 
 export default class BlockchainService {
     
@@ -28,6 +27,8 @@ export default class BlockchainService {
     this.SCA = SCA;
     this.ABI = ABI;
   }
+
+  // TRANSACTION MODULE
 
   /**
      * It takes a function name, parameters, and a from address, and returns a raw transaction object
@@ -171,6 +172,8 @@ export default class BlockchainService {
     return receipt;
   }
 
+  // EVENT MODULE
+
   /**
      * This function returns event logs is published from a smart contract
      * @param {array} topics - The topics of log
@@ -205,14 +208,9 @@ export default class BlockchainService {
     return result;
   }
 
- /**
-  * It takes a private key and a list of parameters, hashes the parameters, and then signs the hash
-  * with the private key
-  * @param privatekey - The private key of the account that will sign the message.
-  * @param params - The parameters that you want to sign.
-  * @returns The signature of the message.
-  */
- /**
+  // SIGNATURE MODULE
+
+  /**
   * It takes a private key and a list of parameters, hashes them, and then signs the hash with the
   * private key
   * @param privatekey - The private key of the account that will sign the message.
@@ -252,6 +250,51 @@ export default class BlockchainService {
     );
 
     return signer;
+  }
+
+  // BLOCK MODULE
+
+  public async getBlock (blockNumber = "lastest") {
+    
+    const block = await this.WEB3.eth.getBlock(blockNumber);
+    return block;
+
+  }
+
+  // FUNCTION MODULE
+
+  public async getFuncCall (funcName, params =[], from) {
+
+    const ABI = JSON.parse(JSON.stringify(this.ABI));
+
+    const contractDeployed = new this.WEB3.eth.Contract(
+      ABI,
+      this.SCA
+    );
+
+    const callData = await contractDeployed.methods[funcName](
+      ...params
+    ).encodeABI();
+
+    return callData;
+    
+  }
+
+  public async estimateGas (funcName, params =[], from) {
+
+    const ABI = JSON.parse(JSON.stringify(this.ABI));
+
+    const contractDeployed = new this.WEB3.eth.Contract(
+      ABI,
+      this.SCA
+    );
+
+    const gasEstimated = await contractDeployed.methods[funcName](
+      ...params
+    ).estimateGas({ from });
+
+    return gasEstimated;
+    
   }
 
 }
