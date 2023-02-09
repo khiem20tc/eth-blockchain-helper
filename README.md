@@ -17,6 +17,8 @@ This library help interacte with Smart Contract and more Web3 utils based on Eth
 
 > **Decode raw transaction**
 
+> **Get transaction**
+
 > **Get receipt transaction**
 
 ### Event
