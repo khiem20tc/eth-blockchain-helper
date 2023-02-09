@@ -161,6 +161,17 @@ export default class BlockchainService {
   }
 
   /**
+   * It returns the transaction object for the given transaction hash
+   * @param {string} txHash - The transaction hash of the transaction you want to get.
+   * @returns A transaction object
+   */
+  public async getTransaction(txHash: string) {
+    const transaction = this.WEB3.eth.getTransaction(txHash);
+
+    return transaction;
+  }
+
+  /**
      * This function returns the receipt of a transaction
      * @param {string} txHash - The transaction hash of the transaction you want to get the receipt
      * for.

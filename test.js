@@ -344,11 +344,11 @@ const ABI=[
   }
 ];
 
-const instante = new BlockchainService(RPC,gasPrice,SCA,ABI);
+const instance = new BlockchainService(RPC,gasPrice,SCA,ABI);
 
 async function main() {
   // create raw transaction
-  const rawTx = await instante.createRaw("newAsset",
+  const rawTx = await instance.createRaw("newAsset",
     ["0x80f5dba5485e7dfa399c856234ebc22b17ab9ac6594a42cc5b66daa5e73e052262724c848c823ae8c4402a29333310c468b6af0c6e54cf07b4c7986100dd42591b", 
       "0x28367816f1f564c2c181013627ca39eed4c41cd9", 
       "3", 
@@ -359,12 +359,12 @@ async function main() {
   console.log("rawTx",rawTx);
 
   // decode raw transaction
-  const decode = await instante.decodeRaw("0xf9012280808094739ec8b040502bf50f3fe3fc96ab5af0803d89fe80b8c4e26b5771490e6b0a1f64e7fd3ccef41e61182dc198732945d88833677850c7fc8656a86d000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000412530b686d44c26c93d0541101f4da47d3db4b6713d6300072b761883d138e89c5631204c6f89fdd398bc5b6702432d556830eb4578f741950ab31722e2c8d87d1b000000000000000000000000000000000000000000000000000000000000001ba0d7b51dcc2c2f0ae1f1b0f54f900f914dea7a31b9f4d9b4ff82420a4a4cd2dbdca007e9d1c43fc375f77f4a092f5bee0700ec096409b5904ec454da6a8bcf28bd9a");
+  const decode = await instance.decodeRaw("0xf9012280808094739ec8b040502bf50f3fe3fc96ab5af0803d89fe80b8c4e26b5771490e6b0a1f64e7fd3ccef41e61182dc198732945d88833677850c7fc8656a86d000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000412530b686d44c26c93d0541101f4da47d3db4b6713d6300072b761883d138e89c5631204c6f89fdd398bc5b6702432d556830eb4578f741950ab31722e2c8d87d1b000000000000000000000000000000000000000000000000000000000000001ba0d7b51dcc2c2f0ae1f1b0f54f900f914dea7a31b9f4d9b4ff82420a4a4cd2dbdca007e9d1c43fc375f77f4a092f5bee0700ec096409b5904ec454da6a8bcf28bd9a");
 
   console.log("decode",decode);
 
   // recovery signer
-  const signer = await instante.recoverSigner("0xf2f5b5c06b13b9e1c801f4620b40e4d11ec4fadd70033d5e73c8044026b420e66d311f65954974c5e01521207274250046eb35cec5462ea4f7a20a174ca91d291b",
+  const signer = await instance.recoverSigner("0xf2f5b5c06b13b9e1c801f4620b40e4d11ec4fadd70033d5e73c8044026b420e66d311f65954974c5e01521207274250046eb35cec5462ea4f7a20a174ca91d291b",
     "0x560f8526C325d4C76DCf6F554F25e29Ad82C5a95",
     "0x739eC8b040502Bf50F3fE3FC96AB5af0803d89fe",
     "0xe26b5771",
@@ -373,18 +373,21 @@ async function main() {
   console.log("signer",signer);
 
   // get block
-  const block = await instante.getBlock(27025025);
+  const block = await instance.getBlock(27025025);
   console.log("block",block);
 
   // get func calldata
-  const funcCalldata = await instante.getFuncCall("newAsset",
+  const funcCalldata = await instance.getFuncCall("newAsset",
   ["0x80f5dba5485e7dfa399c856234ebc22b17ab9ac6594a42cc5b66daa5e73e052262724c848c823ae8c4402a29333310c468b6af0c6e54cf07b4c7986100dd42591b", 
     "0x28367816f1f564c2c181013627ca39eed4c41cd9", 
     "3", 
     "76889264", 
-    "1"],
-  "0xF591BA1879Ad0c4B4048DE714a856138c37a31d3");
+    "1"]);
   console.log("funcCalldata",funcCalldata);
+  
+  //get transaction
+  const transaction = await instance.getTransaction("0x087de883fc21bee35fd47c8f3940519b22a00f1f79c985690114cabed8c319ca");
+  console.log("transaction",transaction);
 }
 
 main();
