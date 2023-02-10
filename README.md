@@ -63,7 +63,7 @@ const BlockchainService = require('eth-blockchain-helper').default;
 *   @param {any} ABI - The ABI of the contract you want to interact with.
 */ 
 const [RPC,gasPrice,SCA,ABI] 
-const instante = new BlockchainService(RPC,gasPrice,SCA,ABI);
+const instance = new BlockchainService(RPC,gasPrice,SCA,ABI);
 
 /* Usage with methods */
 
