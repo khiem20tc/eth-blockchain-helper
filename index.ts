@@ -2,6 +2,7 @@
 
 import Web3 from "web3";
 import {default as Tx} from "ethereumjs-tx";
+import abiDecoder from "abi-decoder";
 
 export default class BlockchainService {
     
@@ -265,6 +266,11 @@ export default class BlockchainService {
 
   // BLOCK MODULE
 
+  /**
+   * It gets the block number from the blockchain.
+   * @param [blockNumber=lastest] - The block number to get the block from.
+   * @returns The block object.
+   */
   public async getBlock (blockNumber = "lastest") {
     
     const block = await this.WEB3.eth.getBlock(blockNumber);
@@ -274,6 +280,13 @@ export default class BlockchainService {
 
   // FUNCTION MODULE
 
+  /**
+   * It takes a function name and an array of parameters, and returns the encoded ABI of the function
+   * call
+   * @param funcName - The name of the function you want to call.
+   * @param params - an array of parameters to pass to the function.
+   * @returns The call data for the function call.
+   */
   public async getFuncCall (funcName, params =[]) {
 
     const ABI = JSON.parse(JSON.stringify(this.ABI));
@@ -291,6 +304,28 @@ export default class BlockchainService {
     
   }
 
+  /**
+   * It takes in a transaction's data field, decodes it using the ABI, and returns the decoded data
+   * @param data - The data field of the transaction.
+   * @returns The decoded data is being returned.
+   */
+  public async decodeFuncCall (data) {
+
+    abiDecoder.addABI(this.ABI);
+
+    const decodedData = abiDecoder.decodeMethod(data);
+
+    return decodedData;
+
+  }
+
+  /**
+   * It returns the estimated gas cost of a function call
+   * @param funcName - The name of the function you want to call.
+   * @param params - an array of parameters to pass to the function
+   * @param from - The address of the account that will be used to send the transaction.
+   * @returns The estimated gas for the transaction.
+   */
   public async estimateGas (funcName, params =[], from) {
 
     const ABI = JSON.parse(JSON.stringify(this.ABI));
