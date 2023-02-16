@@ -4,6 +4,16 @@ import Web3 from "web3";
 import {default as Tx} from "ethereumjs-tx";
 import abiDecoder from "abi-decoder";
 
+interface RawTxType {
+  from: string;
+  to: string,
+  gasLimit: number;
+  gasPrice: number;
+  nonce: number;
+  data: () => void,
+  value: number
+}
+
 export default class BlockchainService {
     
   protected WEB3;
@@ -38,7 +48,7 @@ export default class BlockchainService {
      * @param [from] - The address of the account that will be sending the transaction.
      * @returns A raw transaction object.
      */
-  public async createRaw(funcName="",params,from="",value=0) {
+  public async createRaw(funcName="",params,from="",value=0): Promise<RawTxType> {
       
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
