@@ -10,7 +10,7 @@ interface RawTxType {
   gasLimit: number;
   gasPrice: number;
   nonce: number;
-  data: () => void,
+  data: () => string,
   value: number
 }
 
