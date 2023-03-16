@@ -3,6 +3,8 @@
 import Web3 from "web3";
 import {default as Tx} from "ethereumjs-tx";
 import abiDecoder from "abi-decoder";
+import { Chain, Common, Hardfork } from '@ethereumjs/common'
+import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 
 interface RawTxType {
   from: string;
@@ -20,6 +22,8 @@ export default class BlockchainService {
   protected SCA;
   protected gasPrice;
   protected ABI;
+  protected maxPriorityFeePerGas;
+  protected maxFeePerGas;
 
   /**
      * The constructor function is used to initialize the web3 object, gas price, smart contract
@@ -37,6 +41,8 @@ export default class BlockchainService {
     this.gasPrice = gasPrice;
     this.SCA = SCA;
     this.ABI = ABI;
+    this.maxPriorityFeePerGas = '0x01';
+    this.maxFeePerGas = '0xff';
   }
 
   // TRANSACTION MODULE
@@ -93,6 +99,66 @@ export default class BlockchainService {
     privateKey = Buffer.from(privateKey, "hex");
 
     const transaction = new Tx(rawTx, {chainId: chainId});
+
+    await transaction.sign(privateKey);
+
+    const signedTx = "0x" + transaction.serialize().toString("hex");
+
+    return signedTx;
+  }
+
+  /**
+   * It takes a function name, parameters, from address, and value, and returns a raw transaction
+   * object
+   * @param [funcName] - The name of the function you want to call.
+   * @param params - the parameters of the function you want to call
+   * @param [from] - The address that will be sending the transaction
+   * @param [value=0] - The amount of ETH to send with the transaction.
+   * @returns The raw transaction object.
+   */
+  public async createRawEIP1559(funcName="",params,from="",value=0) {
+      
+    const ABI = JSON.parse(JSON.stringify(this.ABI));
+
+    const contractDeployed = new this.WEB3.eth.Contract(
+      ABI,
+      this.SCA
+    );
+
+    const dataFunc = await contractDeployed.methods[funcName](
+      ...params
+    ).encodeABI();
+
+    const gasLimit = await contractDeployed.methods[funcName](
+      ...params
+    ).estimateGas({ from });
+
+    const nonce = await this.WEB3.eth.getTransactionCount(from);
+
+    const rawTx = {
+      from: from,
+      to: this.SCA,
+      gasLimit,
+      maxPriorityFeePerGas: this.maxPriorityFeePerGas,
+      maxFeePerGas: this.maxFeePerGas,
+      nonce: nonce,
+      data: dataFunc,
+      value: value,
+      type: '0x02',
+    };
+
+    return rawTx;
+  }
+
+  public async signRawEIP1559(rawTx = {}, privateKey, chainId=97) {
+
+    privateKey = Buffer.from(privateKey, "hex");
+
+    //const common = new Common({ eips: [1559] })
+
+    let common = Common.custom({ chainId: chainId }, {hardfork: Hardfork.London})
+
+    const transaction = await FeeMarketEIP1559Transaction.fromTxData(rawTx, { common })
 
     await transaction.sign(privateKey);
 
