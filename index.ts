@@ -42,9 +42,11 @@ export default class BlockchainService {
      * The constructor function is used to initialize the web3 object, gas price, smart contract
      * address, and smart contract ABI
      * @param {string} RPC - The RPC address of the Ethereum node you want to connect to.
+     * @param {string} chainId - The chainId of the Ethereum node you want to connect to.
      * @param {number} gasPrice - The gas price you want to use for your transactions.
      * @param {string} SCA - The address of the smart contract you want to interact with.
      * @param {any} ABI - The ABI of the contract you want to interact with.
+     * @param {any} maxFeePerGas - The maxFeePerGas of the block you want to boradcast transaction.
      */
   constructor(RPC:string,chainId:number,SCA:string,ABI:any,gasBasePrice:any) {
     this.WEB3 = new Web3(
@@ -119,6 +121,10 @@ export default class BlockchainService {
     return signedTx;
   }
 
+  /**
+   * It returns the base fee per gas.
+   * @returns The base fee per gas.
+   */
   public async getBaseFeePerGas() {
     
     const block = await this.WEB3.eth.getBlock("pending");
@@ -129,15 +135,18 @@ export default class BlockchainService {
 
   }
 
-  /**
-   * It takes a function name, parameters, from address, and value, and returns a raw transaction
-   * object
-   * @param [funcName] - The name of the function you want to call.
-   * @param params - the parameters of the function you want to call
-   * @param [from] - The address that will be sending the transaction
-   * @param [value=0] - The amount of ETH to send with the transaction.
-   * @returns The raw transaction object.
-   */
+ /**
+  * It takes in a function name, parameters, the address of the sender, the value of the transaction,
+  * and the maxPriorityFeePerGas, and returns a raw transaction object
+  * @param [funcName] - The name of the function you want to call.
+  * @param params - an array of parameters to pass to the function
+  * @param [from] - The address that will be sending the transaction.
+  * @param [value=0] - The amount of ETH you want to send with the transaction.
+  * @param [maxPriorityFeePerGas=0x01] - This is the amount of ETH TIPs you want to pay for the transaction miner
+  * to be prioritized.
+  * @returns A raw transaction object.
+  */
+ 
   public async createRawEIP1559(funcName="",params=[],from="",value=0,maxPriorityFeePerGas="0x01"): Promise<rawTx1559> {
       
     const ABI = JSON.parse(JSON.stringify(this.ABI));
@@ -173,6 +182,12 @@ export default class BlockchainService {
     return rawTx;
   }
 
+  /**
+   * It takes a raw transaction object and a private key, and returns a signed transaction
+   * @param rawTx - The raw transaction object.
+   * @param privateKey - The private key of the account you want to sign the transaction with.
+   * @returns A signed transaction
+   */
   public async signRawEIP1559(rawTx = {}, privateKey) {
 
     privateKey = Buffer.from(privateKey, "hex");
