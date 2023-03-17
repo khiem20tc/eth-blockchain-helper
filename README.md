@@ -21,6 +21,10 @@ This library help interacte with Smart Contract and more Web3 utils based on Eth
 
 > **Get receipt transaction**
 
+> **Create raw transaction EIP-1559** 
+
+> **Sign raw transaction EIP-1559** 
+
 ### Event
 
 > **Get event log**
@@ -67,8 +71,13 @@ const instance = new BlockchainService(RPC,gasPrice,SCA,ABI);
 
 /* Usage with methods */
 
- // create raw transaction
+  // create raw transaction
   const rawTx = await instance.createRaw("setValue",
+    ["hi",1],
+    "0x560f8526C325d4C76DCf6F554F25e29Ad82C5a95");
+
+  // create raw transaction with EIP-1559
+  const rawTx = await instance.createRawEIP1559("setValue",
     ["hi",1],
     "0x560f8526C325d4C76DCf6F554F25e29Ad82C5a95");
 
