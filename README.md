@@ -7,6 +7,8 @@ This library help interacts with Smart Contract and more Web3 utils in any netwo
 
 > **Get block** 
 
+> **Get base fee of block EIP-1559** 
+
 ### Transaction
 
 > **Create raw transaction** 
@@ -66,8 +68,8 @@ const BlockchainService = require('eth-blockchain-helper').default;
 *   @param {string} SCA - The address of the smart contract you want to interact with.
 *   @param {any} ABI - The ABI of the contract you want to interact with.
 */ 
-const [RPC,gasPrice,SCA,ABI] 
-const instance = new BlockchainService(RPC,gasPrice,SCA,ABI);
+const [RPC,chainId,SCA,ABI,gasBasePrice] 
+const instance = new BlockchainService(RPC,chainId,SCA,ABI,gasBasePrice);
 
 /* Usage with methods */
 
