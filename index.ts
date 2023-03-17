@@ -26,6 +26,7 @@ interface rawTx1559 {
       data: string,
       value: any,
       type: any
+      accessList: any
 }
 
 export default class BlockchainService {
@@ -165,7 +166,8 @@ export default class BlockchainService {
       nonce: nonce,
       data: dataFunc,
       value: value,
-      type: "0x02"
+      type: "0x02",
+      accessList: []
     };
 
     return rawTx;
