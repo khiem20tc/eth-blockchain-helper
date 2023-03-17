@@ -3,17 +3,29 @@
 import Web3 from "web3";
 import {default as Tx} from "ethereumjs-tx";
 import abiDecoder from "abi-decoder";
-import { Chain, Common, Hardfork } from '@ethereumjs/common'
-import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { Common, Hardfork } from "@ethereumjs/common";
+import { FeeMarketEIP1559Transaction } from "@ethereumjs/tx";
 
-interface RawTxType {
-  from: string;
-  to: string,
-  gasLimit: number;
-  gasPrice: number;
-  nonce: number;
-  data: () => void,
-  value: number
+interface rawTx {
+  from: string,
+      to: string,
+      gasLimit: any,
+      gasPrice: any,
+      nonce: any,
+      data: string,
+      value: any
+}
+
+interface rawTx1559 {
+  from: string,
+      to: string,
+      gasLimit: any,
+      maxPriorityFeePerGas: any,
+      maxFeePerGas: any,
+      nonce: any,
+      data: string,
+      value: any,
+      type: any
 }
 
 export default class BlockchainService {
@@ -41,8 +53,8 @@ export default class BlockchainService {
     this.gasPrice = gasPrice;
     this.SCA = SCA;
     this.ABI = ABI;
-    this.maxPriorityFeePerGas = '0x01';
-    this.maxFeePerGas = '0xff';
+    this.maxPriorityFeePerGas = "0x01"; // default config 1
+    this.maxFeePerGas = "0xff"; // default config 255
   }
 
   // TRANSACTION MODULE
@@ -54,7 +66,7 @@ export default class BlockchainService {
      * @param [from] - The address of the account that will be sending the transaction.
      * @returns A raw transaction object.
      */
-  public async createRaw(funcName="",params,from="",value=0): Promise<RawTxType> {
+  public async createRaw(funcName="",params,from="",value=0): Promise<rawTx> {
       
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
@@ -116,7 +128,7 @@ export default class BlockchainService {
    * @param [value=0] - The amount of ETH to send with the transaction.
    * @returns The raw transaction object.
    */
-  public async createRawEIP1559(funcName="",params,from="",value=0) {
+  public async createRawEIP1559(funcName="",params,from="",value=0): Promise<rawTx1559> {
       
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
@@ -144,7 +156,7 @@ export default class BlockchainService {
       nonce: nonce,
       data: dataFunc,
       value: value,
-      type: '0x02',
+      type: "0x02"
     };
 
     return rawTx;
@@ -156,11 +168,11 @@ export default class BlockchainService {
 
     //const common = new Common({ eips: [1559] })
 
-    let common = Common.custom({ chainId: chainId }, {hardfork: Hardfork.London})
+    const common = Common.custom({ chainId: chainId }, {hardfork: Hardfork.London});
 
-    const transaction = await FeeMarketEIP1559Transaction.fromTxData(rawTx, { common })
+    let transaction = FeeMarketEIP1559Transaction.fromTxData(rawTx, { common });
 
-    await transaction.sign(privateKey);
+    transaction = transaction.sign(privateKey);
 
     const signedTx = "0x" + transaction.serialize().toString("hex");
 

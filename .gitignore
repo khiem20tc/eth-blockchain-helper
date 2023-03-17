@@ -3,3 +3,4 @@ _tsconfig.json
 yarn.lock
 /dist
 test.ts
+test.js
