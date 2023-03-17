@@ -31,10 +31,10 @@ interface rawTx1559 {
 export default class BlockchainService {
     
   protected WEB3;
+  protected chainId;
   protected SCA;
   protected gasPrice;
   protected ABI;
-  protected maxPriorityFeePerGas;
   protected maxFeePerGas;
 
   /**
@@ -45,16 +45,15 @@ export default class BlockchainService {
      * @param {string} SCA - The address of the smart contract you want to interact with.
      * @param {any} ABI - The ABI of the contract you want to interact with.
      */
-  constructor(RPC:string,gasPrice:number,SCA:string,ABI:any) {
+  constructor(RPC:string,chainId:number,SCA:string,ABI:any,gasBasePrice:any) {
     this.WEB3 = new Web3(
       new Web3.providers.HttpProvider(RPC)
     );
-
-    this.gasPrice = gasPrice;
+    this.chainId = chainId;
+    this.gasPrice = gasBasePrice; //default config 0
     this.SCA = SCA;
     this.ABI = ABI;
-    this.maxPriorityFeePerGas = "0x01"; // default config 1
-    this.maxFeePerGas = "0xff"; // default config 255
+    this.maxFeePerGas = gasBasePrice; // default config 255 for EIP-1559
   }
 
   // TRANSACTION MODULE
@@ -66,7 +65,7 @@ export default class BlockchainService {
      * @param [from] - The address of the account that will be sending the transaction.
      * @returns A raw transaction object.
      */
-  public async createRaw(funcName="",params,from="",value=0): Promise<rawTx> {
+  public async createRaw(funcName="",params=[],from="",value=0): Promise<rawTx> {
       
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
@@ -106,17 +105,27 @@ export default class BlockchainService {
      * @param [chainId=97] - The chain ID of the network you're sending to.
      * @returns The transaction hash and the transaction object.
      */
-  public async signRaw(rawTx = {}, privateKey, chainId=97) {
+  public async signRaw(rawTx = {}, privateKey) {
 
     privateKey = Buffer.from(privateKey, "hex");
 
-    const transaction = new Tx(rawTx, {chainId: chainId});
+    const transaction = new Tx(rawTx, {chainId: this.chainId});
 
     await transaction.sign(privateKey);
 
     const signedTx = "0x" + transaction.serialize().toString("hex");
 
     return signedTx;
+  }
+
+  public async getBaseFeePerGas() {
+    
+    const block = await this.WEB3.eth.getBlock("pending");
+
+    const baseFeePerGas = block.baseFeePerGas;
+    
+    return baseFeePerGas;
+
   }
 
   /**
@@ -128,7 +137,7 @@ export default class BlockchainService {
    * @param [value=0] - The amount of ETH to send with the transaction.
    * @returns The raw transaction object.
    */
-  public async createRawEIP1559(funcName="",params,from="",value=0): Promise<rawTx1559> {
+  public async createRawEIP1559(funcName="",params=[],from="",value=0,maxPriorityFeePerGas="0x01"): Promise<rawTx1559> {
       
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
@@ -151,7 +160,7 @@ export default class BlockchainService {
       from: from,
       to: this.SCA,
       gasLimit,
-      maxPriorityFeePerGas: this.maxPriorityFeePerGas,
+      maxPriorityFeePerGas: maxPriorityFeePerGas,
       maxFeePerGas: this.maxFeePerGas,
       nonce: nonce,
       data: dataFunc,
@@ -162,13 +171,11 @@ export default class BlockchainService {
     return rawTx;
   }
 
-  public async signRawEIP1559(rawTx = {}, privateKey, chainId=97) {
+  public async signRawEIP1559(rawTx = {}, privateKey) {
 
     privateKey = Buffer.from(privateKey, "hex");
 
-    //const common = new Common({ eips: [1559] })
-
-    const common = Common.custom({ chainId: chainId }, {hardfork: Hardfork.London});
+    const common = Common.custom({ chainId: this.chainId }, {hardfork: Hardfork.London});
 
     let transaction = FeeMarketEIP1559Transaction.fromTxData(rawTx, { common });
 
