@@ -1,5 +1,5 @@
 # eth-blockchain-helper
-This library help interacte with Smart Contract and more Web3 utils based on Ethereum platform.
+This library help interacts with Smart Contract and more Web3 utils in any networks based on the EVM platform (Ethereum, Binance Smart Chain, Polygon,...).
 
 ## Features 
 
