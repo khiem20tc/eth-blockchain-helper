@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Axios Demo</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <h1>Axios Demo</h1>
+    <form id="request-form">
+      <label for="url-input">URL:</label>
+      <input id="url-input" type="text" name="url">
+      <br>
+      <label for="method-select">Method:</label>
+      <select id="method-select" name="method">
+        <option value="get">GET</option>
+        <option value="post">POST</option>
+        <option value="put">PUT</option>
+        <option value="delete">DELETE</option>
+      </select>
+      <br>
+      <label for="data-input">Data:</label>
+      <textarea id="data-input" name="data"></textarea>
+      <br>
+      <button type="submit">Send Request</button>
+    </form>
+    <div id="response-container"></div>
+    <script src="demo.js"></script>
+  </body>
+</html>

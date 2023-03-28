@@ -135,7 +135,7 @@ export default class BlockchainService {
 
   }
 
- /**
+  /**
   * It takes in a function name, parameters, the address of the sender, the value of the transaction,
   * and the maxPriorityFeePerGas, and returns a raw transaction object
   * @param [funcName] - The name of the function you want to call.
@@ -453,6 +453,28 @@ export default class BlockchainService {
 
     return gasEstimated;
     
+  }
+
+ /**
+  * It creates a new address based on the address, salt, and initCode.
+  * @param address - The address of the contract that will be created.
+  * @param salt - A 256-bit salt value.
+  * @param initCode - The bytecode of the contract you want to deploy.
+  * @returns The address of the contract that will be created.
+  */
+  public async precomputeCreate2 (address, salt, initCode) {
+
+    let codeHash = await this.WEB3.utils.soliditySha3(initCode);
+
+    const hash = await this.WEB3.utils.soliditySha3(
+      { t: 'bytes1', v: '0xff' },
+      { t: 'address', v: address },
+      { t: 'uint256', v: salt },
+      { t: 'bytes', v: codeHash }
+    );
+    
+    // NOTE: cast last 20 bytes of hash to address
+    return '0x' + hash.slice(26);
   }
 
 }

@@ -1,6 +1,6 @@
 {
   "name": "eth-blockchain-helper",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "package helper for ethereum blockchain and EVM based network",
   "main": "dist/commonjs/index.js",
   "types": "dist/commonjs/index.d.ts",
@@ -11,7 +11,7 @@
     "test": "node test.js",
     "start": "ts-node index",
     "build": "tsc",
-    "fix": "eslint --fix ."
+    "fix": "eslint --fix index.ts"
   },
   "author": "Khiem Nguyen Huynh Huu",
   "license": "ISC",
@@ -24,7 +24,11 @@
     "@ethereumjs/common": "^3.1.1",
     "@ethereumjs/tx": "^4.1.1",
     "abi-decoder": "^2.4.0",
+    "eth-helpers": "^1.3.1",
     "ethereumjs-tx": "1.3.5",
+    "keccak": "^3.0.3",
+    "keccak256": "^1.0.6",
+    "sha3-wasm": "^1.0.0",
     "web3": "1.8.0"
   },
   "keywords": [
