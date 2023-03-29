@@ -47,7 +47,7 @@ This library help interacts with Smart Contract and more Web3 utils in any netwo
 
 > **Estimate gas**
 
-### CREATE2 OPCODE
+### CREATE2 opcode
 
 > **Pre-compute SCA with CREATE2 opcode**
 
