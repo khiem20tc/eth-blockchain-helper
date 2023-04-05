@@ -59,9 +59,10 @@ This library help interacts with Smart Contract and more Web3 utils in any netwo
 
 ```javascript import
 // es6
-import BlockchainService from 'eth-blockchain-helper';
+import pkg from 'eth-blockchain-helper';
+const BlockchainService = pkg.default;
 
-// node
+// es5
 const BlockchainService = require('eth-blockchain-helper').default;
 ```
 
