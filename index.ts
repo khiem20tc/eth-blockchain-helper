@@ -390,6 +390,26 @@ export default class BlockchainService {
 
   }
 
+  // ACCOUNT MODULE
+
+  /**
+   * This function retrieves the nonce for a given Ethereum address using the Web3 library in
+   * TypeScript.
+   * @param [address] - The Ethereum address for which the nonce is being retrieved. The nonce is a
+   * unique number used to prevent replay attacks on transactions.
+   * @returns The function `getNonce` returns the nonce of a given Ethereum address. The nonce is a
+   * number that represents the number of transactions sent from a specific address. The function uses
+   * the `WEB3` library to interact with the Ethereum blockchain and retrieve the nonce. The returned
+   * value is the nonce as a number.
+   */
+  
+  public async getNonce (address = "") {
+    
+    const nonce = await this.WEB3.eth.getNonce(address);
+    return nonce;
+
+  }
+
   // FUNCTION MODULE
 
   /**

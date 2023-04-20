@@ -9,6 +9,10 @@ This library help interacts with Smart Contract and more Web3 utils in any netwo
 
 > **Get base fee of block EIP-1559** 
 
+### Account
+
+> **Get nonce** 
+
 ### Transaction
 
 > **Create raw transaction** 
