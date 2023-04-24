@@ -122,3 +122,9 @@ const instance = new BlockchainService(RPC,chainId,SCA,ABI,gasBasePrice);
 
 
 ```
+
+### Contact and donation
+
+[Contact me by email](mailto:khiem20tc@gmail.com)
+
+[Buy me a coffee](https://www.buymeacoffee.com/hkne)
