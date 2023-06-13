@@ -31,6 +31,8 @@ This library help interacts with Smart Contract and more Web3 utils in any netwo
 
 > **Sign raw transaction EIP-1559** 
 
+> **Create raw transaction to deploy Smart Contract** 
+
 ### Event
 
 > **Get event log**
@@ -110,6 +112,22 @@ const instance = new BlockchainService(RPC,chainId,SCA,ABI,gasBasePrice);
     ["hi",1],
     "0x560f8526C325d4C76DCf6F554F25e29Ad82C5a95",
     0); //baseFee 
+
+  /**
+   * This function creates a raw transaction for deploying a smart contract with given bytecode,
+   * parameters, sender address, and value.
+   * @param [bytecode] - The bytecode of the smart contract that you want to deploy.
+   * @param params - params is an array of input parameters that will be passed to the constructor of
+   * the smart contract being deployed. These parameters are used to initialize the state variables of
+   * the contract.
+   * @param [from] - The Ethereum address that will be used to deploy the smart contract.
+   * @param [value=0] - The `value` parameter in this function represents the amount of ether (in wei)
+   * that is being sent along with the contract deployment transaction. It is set to 0 by default, but
+   * can be changed to any valid amount of ether.
+   * @returns a Promise that resolves to a raw transaction object (`rawTx`) which contains the
+   * necessary information to deploy a smart contract on the Ethereum blockchain.
+   */
+  const rawTx = await instance.createRawDeploySC(bytecode, params, from, value);  
 
   /** 
    * Decode raw transaction

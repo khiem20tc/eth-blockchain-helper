@@ -204,6 +204,54 @@ export default class BlockchainService {
   }
 
   /**
+   * This function creates a raw transaction for deploying a smart contract with given bytecode,
+   * parameters, sender address, and value.
+   * @param [bytecode] - The bytecode of the smart contract that you want to deploy.
+   * @param params - params is an array of input parameters that will be passed to the constructor of
+   * the smart contract being deployed. These parameters are used to initialize the state variables of
+   * the contract.
+   * @param [from] - The Ethereum address that will be used to deploy the smart contract.
+   * @param [value=0] - The `value` parameter in this function represents the amount of ether (in wei)
+   * that is being sent along with the contract deployment transaction. It is set to 0 by default, but
+   * can be changed to any valid amount of ether.
+   * @returns a Promise that resolves to a raw transaction object (`rawTx`) which contains the
+   * necessary information to deploy a smart contract on the Ethereum blockchain.
+   */
+  public async createRawDeploySC(bytecode="", params=[],from="",value=0): Promise<rawTx> {
+
+    const ABI = JSON.parse(JSON.stringify(this.ABI));
+
+    let contract = new this.WEB3.eth.Contract(ABI);
+
+    const nonce = await this.WEB3.eth.getTransactionCount(from);
+
+    const contractData = contract
+    .deploy({
+        data: bytecode,
+        arguments: params
+    })
+    .encodeABI()
+
+    const gasLimit = contract
+    .deploy({
+        data: bytecode,
+        arguments: params
+    }).estimateGas({ from });
+
+    const rawTx = {
+      nonce: this.WEB3.utils.toHex(nonce),
+      gasLimit: this.WEB3.utils.toHex(gasLimit),
+      gasPrice: this.WEB3.utils.toHex(this.gasPrice),
+      from: from, 
+      data: contractData,
+      to: "0x0000000000000000000000000000000000000000",
+      value: this.WEB3.utils.toHex(value)
+    }; 
+
+    return rawTx;
+  }
+
+  /**
    * It takes a raw transaction string, and returns an object with the transaction's details
    * @param {string} raw - The raw transaction string
    * @param [chainId=97] - The chainId of the network you're on.
