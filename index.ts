@@ -8,7 +8,7 @@ import { FeeMarketEIP1559Transaction } from "@ethereumjs/tx";
 
 interface rawTx {
   from: string,
-      to: string,
+      to?: string,
       gasLimit: any,
       gasPrice: any,
       nonce: any,
@@ -244,7 +244,7 @@ export default class BlockchainService {
       gasPrice: this.WEB3.utils.toHex(this.gasPrice),
       from: from, 
       data: contractData,
-      to: "0x0000000000000000000000000000000000000000",
+      //to: "0x0000000000000000000000000000000000000000",
       value: this.WEB3.utils.toHex(value)
     }; 
 
