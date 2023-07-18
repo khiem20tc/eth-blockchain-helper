@@ -5,6 +5,9 @@ import {default as Tx} from "ethereumjs-tx";
 import abiDecoder from "abi-decoder";
 import { Common, Hardfork } from "@ethereumjs/common";
 import { FeeMarketEIP1559Transaction } from "@ethereumjs/tx";
+import {generateMnemonic,mnemonicToSeed} from "bip39";
+import HDKey from "hdkey";
+import {privateToPublic, publicToAddress, toChecksumAddress} from "ethereumjs-util";
 
 interface rawTx {
   from: string,
@@ -221,22 +224,22 @@ export default class BlockchainService {
 
     const ABI = JSON.parse(JSON.stringify(this.ABI));
 
-    let contract = new this.WEB3.eth.Contract(ABI);
+    const contract = new this.WEB3.eth.Contract(ABI);
 
     const nonce = await this.WEB3.eth.getTransactionCount(from);
 
     const contractData = contract
-    .deploy({
+      .deploy({
         data: bytecode,
         arguments: params
-    })
-    .encodeABI()
+      })
+      .encodeABI();
 
     const gasLimit = contract
-    .deploy({
+      .deploy({
         data: bytecode,
         arguments: params
-    }).estimateGas({ from });
+      }).estimateGas({ from });
 
     const rawTx = {
       nonce: this.WEB3.utils.toHex(nonce),
@@ -523,7 +526,9 @@ export default class BlockchainService {
     
   }
 
- /**
+  // CONTRACT MODULE
+
+  /**
   * It creates a new address based on the address, salt, and initCode.
   * @param address - The address of the contract that will be created.
   * @param salt - A 256-bit salt value.
@@ -532,17 +537,89 @@ export default class BlockchainService {
   */
   public async precomputeCreate2 (address, salt, initCode) {
 
-    let codeHash = await this.WEB3.utils.soliditySha3(initCode);
+    const codeHash = await this.WEB3.utils.soliditySha3(initCode);
 
     const hash = await this.WEB3.utils.soliditySha3(
-      { t: 'bytes1', v: '0xff' },
-      { t: 'address', v: address },
-      { t: 'uint256', v: salt },
-      { t: 'bytes', v: codeHash }
+      { t: "bytes1", v: "0xff" },
+      { t: "address", v: address },
+      { t: "uint256", v: salt },
+      { t: "bytes", v: codeHash }
     );
     
     // NOTE: cast last 20 bytes of hash to address
-    return '0x' + hash.slice(26);
+    return "0x" + hash.slice(26);
+  }
+
+  // WALLET MODULE
+
+  /**
+   * The function "generateMnemonic" generates a random mnemonic string and returns it.
+   * @returns a generated mnemonic, which is a string.
+   */
+  public async generateMnemonic () {
+    const mnemonic = generateMnemonic(); //generates string
+    return mnemonic;
+  }
+
+  /**
+   * The function takes a mnemonic phrase as input, converts it into a seed buffer, and then returns
+   * the seed as a hexadecimal string.
+   * @param mnemonic - The parameter "mnemonic" is a string that represents a mnemonic phrase. A
+   * mnemonic phrase is a set of words that can be used to generate a cryptographic seed.
+   * @returns the seed as a hexadecimal string.
+   */
+  public async mnemonicToSeed (mnemonic) {
+    const _seed = await mnemonicToSeed(mnemonic); //creates seed buffer
+    const seed = _seed.toString("hex");
+    return seed;
+  }
+
+  /**
+   * The function "seedToPrivakey" takes a seed and an optional position, derives a private key from
+   * the seed at the specified position, and returns the private key as a hexadecimal string.
+   * @param seed - The seed parameter is a hexadecimal string that represents the seed value used to
+   * generate a private key.
+   * @param [position=0] - The "position" parameter represents the index of the account you want to
+   * derive the private key for. It is used in the derivation path `m/44'/60'/0'/0/` to
+   * determine the specific account to derive the private key from.
+   * @returns the private key as a hexadecimal string.
+   */
+  public async seedToPrivakey (seed, position=0) {
+    seed = Buffer.from(seed, 'hex');
+    const root = await HDKey.fromMasterSeed(seed);
+   
+    const addrNode = await root.derive(`m/44'/60'/0'/0/${position}`); //account at position 
+
+    const privateKey = await addrNode._privateKey.toString("hex");
+    
+    return privateKey;
+  }
+
+  /**
+   * The function takes a private key as input, converts it to a public key, and returns the public key
+   * as a hexadecimal string.
+   * @param privateKey - The `privateKey` parameter is a string representing a private key in
+   * hexadecimal format.
+   * @returns the public key derived from the given private key.
+   */
+  public async privateKeyToPublicKey (privateKey) {
+    privateKey = Buffer.from(privateKey, 'hex');
+    const _publicKey = await privateToPublic(privateKey);
+    const publicKey = _publicKey.toString("hex")
+    return publicKey;
+  }
+
+  /**
+   * The function takes a public key as input, converts it to an address, and returns the address in
+   * checksum format.
+   * @param publicKey - The `publicKey` parameter is a hexadecimal string representing a public key.
+   * @returns the Ethereum address corresponding to the given public key.
+   */
+  public async publicKeyToAddress (publicKey) {
+    publicKey = Buffer.from(publicKey, 'hex');
+    const addr = await publicToAddress(publicKey).toString("hex");
+    const address = toChecksumAddress("0x"+addr);
+    return address;
   }
 
 }

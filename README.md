@@ -53,9 +53,19 @@ This library help interacts with Smart Contract and more Web3 utils in any netwo
 
 > **Estimate gas**
 
-### CREATE2 opcode
+### Contract
 
 > **Pre-compute SCA with CREATE2 opcode**
+
+### Wallet
+
+> **Generate mnemonic**
+
+> **Mnemonic To PrivateKey**
+
+> **PrivateKey To PublicKey**
+
+> **PublicKey To Address**
 
 ### Install
 
